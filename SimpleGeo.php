@@ -74,19 +74,40 @@ class GeoRecord {
 
 class SimpleGeo extends CURL {
 
+    /** @var SimpleGeo $oInstance */
+    private static $oInstance;
+
 	private $consumer;
 	private $token, $secret;
 	
 	const BASE_URL = 'http://api.simplegeo.com/';
-	
+
+    /**
+     * @param string $token
+     * @param string $secret
+     */
 	public function SimpleGeo($token = false, $secret = false) {
 		$this->token = $token;
 		$this->secret = $secret;
 		$this->consumer = new OAuthConsumer($this->token, $this->secret);
 	}
+
+    /**
+     * @static
+     * @param string $token
+     * @param string $secret
+     * @return SimpleGeo
+     */
+    public static function getInstance($token = false, $secret = false) {
+        if (!self::$oInstance instanceof self) {
+            self::$oInstance = new self($token, $secret);
+        }
+
+        return self::$oInstance;
+    }
 	
 	
-/**
+    /**
 		Extracts the ID from a SimpleGeo ID (SG_XXXXXXXXXXXXXXXXXXXXXX)
 		
 		@param	string	id	The SimpleGeo ID of a feaure
