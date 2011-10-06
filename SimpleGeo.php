@@ -276,6 +276,70 @@ class SimpleGeo extends CURL {
 	public function DeletePlace(Place $place) {
 		return $this->SendRequest('DELETE', '1.0/features/' . $place->ID . '.json');
 	}
+
+	/**
+		You may request all the layers associated with your account.
+        If you own more than the number of records requested, a cursor will
+        accompany the response so that you can paginate.
+
+        @var array params
+                    => limit (optional)  - The number of layers to return (1-100). The default is 25.
+                    => cursor (optional) - Paginate to the next page of results. In a response,
+                                           there is a property labeled next_cursor. Pass the corresponding
+                                           next_cursor value as cursor to request the next page of results.
+	**/
+	public function ListLayers($params = array()) {
+		return $this->SendRequest('GET', '0.1/layers.json', json_encode($params));
+	}
+
+	/**
+		You may request detailed information about a particular layer by passing its name.
+        Detailed information includes things like title, description, and a timestamp for
+        when the layer was last updated.
+
+		@var	string	$id The name of the layer
+
+	**/
+	public function GetLayer($id) {
+		return $this->SendRequest('GET', '0.1/layers/' . $id . '.json');
+	}
+
+	/**
+		To add or update a layer, provide an ID, name, and description. You may also specify an array
+        of callback URLs. These URLs will be notified any time a record is updated.
+
+		@var	string	$id The name of the layer (for referencing when adding records)
+		@var	string	$title The title of the layer
+		@var	string	$description The description of the layer
+		@var	bool	$public Whether or not the designated layer is public
+
+	**/
+    public function PutLayer($id, $title = null, $description = null, $public = false) {
+        $params = array(
+            'public' => $public
+        );
+
+        if ($title !== null) {
+            $params['title'] = $title;
+        }
+
+        if ($description !== null) {
+            $params['description'] = $description;
+        }
+
+		return $this->SendRequest('PUT', '0.1/layers/' . $id . '.json', json_encode($params));
+    }
+
+	/**
+		You may delete any layer you own by simply passing its name.
+        Warning! A deleted layer is irrecoverable. Use this command carefully.
+
+		@var	string	$id The name of the layer
+
+	**/
+	public function DeleteLayer($id) {
+		return $this->SendRequest('DELETE', '0.1/layers/' . $id . '.json');
+	}
 	
 
 	/**
