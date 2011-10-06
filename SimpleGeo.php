@@ -187,7 +187,9 @@ class SimpleGeo extends CURL {
     public function ContextRecord(GeoRecord $record) {
         $location = $this->GetRecord($record);
         
-        if (isset($location['code']) && $location['code'] == 404) {
+        if (isset($location['code'])
+        && ($location['code'] == 404
+        ||  $location['code'] == 402)) {
             return null;
         }
         
@@ -425,8 +427,26 @@ class SimpleGeo extends CURL {
 	public function RecordHistory(GeoRecord $record) {
 		return $this->SendRequest('GET', '0.1/records/' . $record->Layer . '/' . $record->ID . '/history.json');
 	}
-	
-	
+
+    /**
+      Retrieve SimpleGeo Storage records nearby the SimpleGeo Storage record given
+
+
+       @param GeoRecord $record
+       @param array $params
+       @return array
+     */
+    public function NearbyRecordsRecord(GeoRecord $record, $params = array()) {
+        $location = $this->GetRecord($record);
+
+        if (isset($location['code'])
+        && ($location['code'] == 404
+        ||  $location['code'] == 402)) {
+            return null;
+        }
+
+        return $this->NearbyRecordsCoord($record->Layer, $location['geometry']['coordinates'][1], $location['geometry']['coordinates'][0], $params);
+    }
 	
 	/**
 		Retrieve SimpleGeo Storage records nearby the coordinate given
