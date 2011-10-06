@@ -180,8 +180,27 @@ class SimpleGeo extends CURL {
 		}
 		return $this->SendRequest('GET', '1.0/context/' . $lat . ',' . $lng . '.json?features__category=' . $category . '&filter=features');
 	}
-	
-	
+
+    /**
+     * Returns Context Info from Coords Stored in SimpleGeo Storage record
+     */
+    public function ContextRecord(GeoRecord $record) {
+        $location = $this->GetRecord($record);
+        
+        if (isset($location['code']) && $location['code'] == 404) {
+            return null;
+        }
+        
+        return $this->ContextCoord($location['geometry']['coordinates'][1], $location['geometry']['coordinates'][0]);
+    }
+
+    /**
+     * Returns a specific feature from Coords Stored in SimpleGeo Storage record
+     */
+    public function ContextRecordFeature(GeoRecord $record, $category) {
+        $location = $this->GetRecord($record);
+        return $this->ContextCoordFeature($location['geometry']['coordinates'][1], $location['geometry']['coordinates'][0], $category);
+    }
 	
 	/**
 		Returns context of an address
