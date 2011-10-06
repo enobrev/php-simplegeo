@@ -17,7 +17,7 @@ Begin by creating an instance of the SimpleGeo client.
 
 First create a record object:
 
-	$record = new Record('com.layer', 'unique-id', 37.23, -80.417778);
+	$record = new GeoRecord('com.layer', 'unique-id', 37.23, -80.417778);
 
 Then pass it on to the client:
 
@@ -33,7 +33,7 @@ To add multiple records create an array of Record objects and pass it into the c
 
 Getting and deleting can take in either a Record object or a layer and ID. The following two methods are synonymous:
 
-	$geo->DeleteRecord(new Record('com.layer', 'unique-id'));
+	$geo->DeleteRecord(new GeoRecord('com.layer', 'unique-id'));
 	$geo->DeleteRecord('com.layer', 'unique-id');
 
 ## Getting nearby records
